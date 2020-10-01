@@ -1,18 +1,31 @@
 {
-  "name": "back-steak",
+  "name": "Steakeria",
   "version": "1.0.0",
-  "description": "backend stakeria",
+  "description": "Projeto da stakeria",
   "main": "server.js",
-  "scripts": {
-    "start": "node server",
-    "server": "nodemon server",
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "engines": {
+    "node": "12.16.3"
   },
-  "author": "mbarba",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server",
+    "server": "nodemon server"
+  },
+  "keywords": [
+    "express"
+  ],
+  "author": "Marcelo Barbalho",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "config": "^3.3.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "express-validator": "^6.4.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.5"
+  },
+  "devDependencies": {
     "nodemon": "^2.0.4"
   }
 }

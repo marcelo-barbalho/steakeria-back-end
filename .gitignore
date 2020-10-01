@@ -1,17 +1,6 @@
-# dependencies
-/node_modules
 node_modules/
-
-
-
-
-
-# misc
+/node_modules
+default.json
+npm-debug.log
 .DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-.env
-
-
+/*.env
