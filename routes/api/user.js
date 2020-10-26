@@ -76,7 +76,7 @@ router.patch('/:userId', [], async (request, res, next) => {
 // @route    GET /user
 // @desc     LIST user
 // @access   Public
-router.get('/', [], async (req, res, next) => {
+router.get('/',auth, [], async (req, res, next) => {
   try {
     const user = await User.find({})
     res.json(user)

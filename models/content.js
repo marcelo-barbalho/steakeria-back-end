@@ -23,7 +23,7 @@ const HomeContentSchema = new mongoose.Schema({
             }
         }
     ],
-    infos =[
+    infos : [
         {
             icon: {
                 type : String,

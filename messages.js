@@ -1,6 +1,10 @@
 
 const MSGS = {
     'CATEGORY404' : 'Categoria não encontrada',
+    'CONTENT404':'Conteúdo não encontrado',
+    'FILE_NOT_SENT':'Arquivo não enviado!', 
+    'FILE_UPLOADED':'Arquivo enviado',
+    'FILE_INVALID':'Favor enviar um arquivo no formato imagem.', 
     'GENERIC_ERROR': 'Erro!',
     'INVALID_TOKEN' : 'Token Inválido',
     'PASSWORD_INVALID' : 'Senha incorreta!',
