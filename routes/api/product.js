@@ -5,6 +5,7 @@ const router = express.Router();
 const MSGS = require('../../messages')
 const auth = require('../../middleaware/auth')
 const file = require('../../middleaware/file')
+const config = require('config')
 
 
 
@@ -16,6 +17,8 @@ router.get('/:id',[], async (req, res, next) => {
     try {
         const id = req.params.id
         const product = await Product.findOne({_id : id})
+        const BUCKET_PUBLIC_PATH = process.env.BUCKET_PUBLIC_PATH || config.get('BUCKET_PUBLIC_PATH')
+        product.photo = `${BUCKET_PUBLIC_PATH}${product.photo}`
         if(product){
             res.json(product)
         }else{
@@ -69,8 +72,13 @@ router.delete('/:id',[], async (req, res, next) => {
 // @access   Public
 router.get('/', async (req, res, next) => {
     try {
-      const product = await Product.find({})
-      res.json(product)
+      let products = await Product.find({})
+      const BUCKET_PUBLIC_PATH = process.env.BUCKET_PUBLIC_PATH || config.get('BUCKET_PUBLIC_PATH')
+      products = products.map(function(product){
+        product.photo = `${BUCKET_PUBLIC_PATH}${product.photo}`
+        return product
+      })
+      res.json(products)
     } catch (err) {
       console.error(err.message)
       res.status(500).send({ "error": MSGS.GENERIC_ERROR })
@@ -87,10 +95,13 @@ router.post('/',auth, file, async (req, res, next) => {
       if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() })
       } else {
-        req.body.photo=`uploads/${req.files.photo.name}`
+        req.body.photo=`product/${req.body.photo_name}`
         let product = new Product(req.body)
         await product.save()
         if (product.id) {
+          
+          const BUCKET_PUBLIC_PATH = process.env.BUCKET_PUBLIC_PATH || config.get('BUCKET_PUBLIC_PATH')
+          product.photo = `${BUCKET_PUBLIC_PATH}${product.photo}`
           res.json(product);
         }
       }

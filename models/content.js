@@ -81,7 +81,22 @@ const HomeContentSchema = new mongoose.Schema({
                     min: 1
                 }
             }
-        ]
+        ],
+        footer:[
+        {
+            title:{
+                type : String,
+                required : true
+            },
+            description:{
+                type : String,
+                required : true
+            },
+            order : {
+                type : Number,
+                min: 1
+            }
+        }]
     }
 }, { autoCreate : true })
 
