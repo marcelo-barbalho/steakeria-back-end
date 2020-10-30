@@ -5,6 +5,8 @@ const MSGS = require('../messages')
 
 
 module.exports = function (req, res, next) {
+
+  const jwtSecret = process.env.jwtSecret || config.get('jwtSecret')
   // Get token from header
   const token = req.header('x-auth-token');
 
@@ -13,7 +15,7 @@ module.exports = function (req, res, next) {
   }
 
   try {
-    jwt.verify(token, config.get('jwtSecret'), (error, decoded) => {
+    jwt.verify(token, jwtSecret, (error, decoded) => {
       if (error) {
         return res.status(401).json({ msg: MSGS.INVALID_TOKEN });
       }

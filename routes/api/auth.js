@@ -19,6 +19,7 @@ router.post('/',[
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() })
     }
+    const jwtSecret = process.env.jwtSecret || config.get('jwtSecret')
     const { email, password } = req.body
     try{
         let user = await User.findOne({ email }).select('id password email name')
@@ -35,7 +36,7 @@ router.post('/',[
                       name: user.name
                     }
                 }
-                jwt.sign( payload, config.get('jwtSecret'), { expiresIn: '5 days' },
+                jwt.sign( payload, jwtSecret, { expiresIn: '5 days' },
                     (err, token) => {
                       if (err) throw err;
                       payload.token = token
