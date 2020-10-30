@@ -3,6 +3,7 @@ const Category = require('../../models/category');
 const { check, validationResult } = require('express-validator');
 const router = express.Router();
 const MSGS = require('../../messages')
+const auth = require('../../middleaware/auth')
 
 
 // @route    GET /category/:id
@@ -26,8 +27,8 @@ router.get('/:id',[], async (req, res, next) => {
 
 // @route    PATCH /category/:id
 // @desc     PARTIAL UPDATE category
-// @access   Public
-router.patch('/:id',[], async (req, res, next) => {
+// @access   Private
+router.patch('/:id',auth, async (req, res, next) => {
   try {
       const category = await Category.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
       if(category){
@@ -43,8 +44,8 @@ router.patch('/:id',[], async (req, res, next) => {
 
 // @route    DELETE /category/:id
 // @desc     DELETE category
-// @access   Public
-router.delete('/:id',[], async (req, res, next) => {
+// @access   Private
+router.delete('/:id',auth, async (req, res, next) => {
   try {
       const id = req.params.id
       const category = await Category.findOneAndDelete({_id : id})
@@ -76,10 +77,10 @@ router.get('/', async (req, res, next) => {
 
 // @route    POST /category
 // @desc     CREATE category
-// @access   Public
+// @access   Private
 router.post('/', [
     check('name').not().isEmpty(),check('icon').not().isEmpty()
-  ], async (req, res, next) => {
+  ], auth, async (req, res, next) => {
     try {
       const errors = validationResult(req)
       if (!errors.isEmpty()) {
