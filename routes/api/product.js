@@ -34,10 +34,15 @@ router.get('/:id',[], async (req, res, next) => {
 // @route    PATCH /product/:id
 // @desc     PARTIAL UPDATE product
 // @access   Public
-router.patch('/:id',[], async (req, res, next) => {
+router.patch('/:id',auth, file, async (req, res, next) => {
   try {
+      req.body.last_modified_by=req.user.id
+      if (req.body.photo_name) {
+        req.body.photo=`product/${req.body.photo_name}`
+      }
       const product = await Product.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
       if(product){
+        
           res.json(product)
       }else{
           res.status(404).send({ "error": MSGS.PRODUCT404 }) 
@@ -88,7 +93,7 @@ router.get('/', async (req, res, next) => {
 
 // @route    POST /product
 // @desc     CREATE product
-// @access   Public
+// @access   Private
 router.post('/',auth, file, async (req, res, next) => {
     try {
       const errors = validationResult(req)
@@ -97,6 +102,7 @@ router.post('/',auth, file, async (req, res, next) => {
       } else {
         req.body.photo=`product/${req.body.photo_name}`
         let product = new Product(req.body)
+        product.last_modified_by=req.user.id
         await product.save()
         if (product.id) {
           
