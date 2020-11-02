@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const HomeContentSchema = new mongoose.Schema({
     banner : [
         {
-            product_banner_photo : {
+            photo : {
                 type : String,
                 required : true
             },
@@ -25,7 +25,7 @@ const HomeContentSchema = new mongoose.Schema({
     ],
     infos : [
         {
-            icon: {
+            photo: {
                 type : String,
                 required : true
             },
@@ -97,7 +97,10 @@ const HomeContentSchema = new mongoose.Schema({
                 min: 1
             }
         }]
-    }
+    },
+    last_modification_date: {
+        type: Date,
+        default:Date.now    }
 }, { autoCreate : true })
 
 module.exports = mongoose.model('content', HomeContentSchema);

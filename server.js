@@ -21,6 +21,9 @@ app.use(fileUpload({createParentPath:true}))
 
 app.get("/", (req, res) => res.send("E ai, estou funcionando?"));
 app.use("/auth", require("./routes/api/auth"));
+app.use("/banner", require("./routes/api/banner"));
+app.use("/infos", require("./routes/api/infos"));
+app.use("/services", require("./routes/api/services"));
 app.use("/category", require("./routes/api/category"));
 app.use("/content", require("./routes/api/content"));
 app.use("/product", require("./routes/api/product"));

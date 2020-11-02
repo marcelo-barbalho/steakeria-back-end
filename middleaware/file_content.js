@@ -7,6 +7,11 @@ const slugify = require('../service/slugify')
 
 
 
+// banner[i].product_banner_photo
+// infos[i].icon
+// about.photo
+// services.service[i].photo
+
 
 module.exports = async function (req, res, next) {
 
@@ -26,9 +31,9 @@ module.exports = async function (req, res, next) {
                 res.status(204).send({error:MSGS.FILE_NOT_SENT})
             }
     } else{
-        let photo = req.files.photo
+        let photo = req.files['about.photo']
         const name = slugify(photo.name)
-        req.body.photo_name = name
+        req.body.about_photo_name = name
 
         if (photo.mimetype.includes('image/')){
         const file = await photo.mv(`./uploads/${name}`)
@@ -36,7 +41,7 @@ module.exports = async function (req, res, next) {
         const params = {
             Bucket:BUCKET_NAME,
             ACL:'public-read',
-            Key: `product/${name}`, 
+            Key: `about/${name}`, 
             Body: fs.createReadStream(`./uploads/${name}`)
         }
         s3.upload(params, function (err, data) {
