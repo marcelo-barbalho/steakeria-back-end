@@ -33,7 +33,6 @@ module.exports = async function (req, res, next) {
     } else{
         let photo = req.files['about.photo']
         const name = slugify(photo.name)
-        req.body.about_photo_name = name
 
         if (photo.mimetype.includes('image/')){
         const file = await photo.mv(`./uploads/${name}`)
@@ -52,6 +51,7 @@ module.exports = async function (req, res, next) {
             }else{
                 console.log(`File uploaded sucefully. ${data.location}`)
                 fs.unlinkSync(`./uploads/${name}`)
+                req.body['about.photo']=`about/${name}`
                 next()
             }
         })

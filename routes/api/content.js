@@ -3,10 +3,12 @@ const Content = require('../../models/content')
 const auth = require('../../middleaware/auth')
 const { check, validationResult } = require('express-validator');
 const router = express.Router();
-const bcrypt = require('bcryptjs');
 const MSGS = require('../../messages')
 const file = require('../../middleaware/file_content')
 const config = require('config')
+const complete_link = require('../../service/complete_link')
+
+
 
 const BUCKET_PUBLIC_PATH = process.env.BUCKET_PUBLIC_PATH || config.get('BUCKET_PUBLIC_PATH')
 
@@ -16,8 +18,9 @@ const BUCKET_PUBLIC_PATH = process.env.BUCKET_PUBLIC_PATH || config.get('BUCKET_
 router.delete('/:contentId', auth, async(req, res, next) => {
   try {
     const id = req.params.contentId
-    const content = await Content.findOneAndDelete({_id : id})
+    let content = await Content.findOneAndDelete({_id : id})
     if (content) {
+      content = complete_link(content)
       res.json(content)
     } else {
       res.status(404).send({ "error": MSGS.CONTENT404 })
@@ -39,11 +42,11 @@ router.patch('/:contentId', auth, file, async (req, res, next) => {
       return
     }
     const id = req.params.contentId
-    req.body['about.photo']=`about/${req.body.about_photo_name}`
+    
     const update = { $set: req.body }
-    const content = await Content.findByIdAndUpdate(id, update, { new: true })
+    let content = await Content.findByIdAndUpdate(id, update, { new: true })
     if (content) {      
-      content.about.photo = `${BUCKET_PUBLIC_PATH}${content.about.photo}`
+      content = complete_link(content)
       res.send(content)
     } else {
       res.status(404).send({ error: MSGS.CONTENT404 })
@@ -59,7 +62,8 @@ router.patch('/:contentId', auth, file, async (req, res, next) => {
 // @access   Public
 router.get('/', async (req, res, next) => {
   try {
-    const content = await Content.findOne({}).sort('-last_modification_date')
+    let content = await Content.findOne({}).sort('-last_modification_date')
+    content = complete_link(content)
     res.json(content)
   } catch (err) {
     console.error(err.message)
@@ -76,6 +80,7 @@ router.post('/', auth, async (req, res, next) => {
     let content = new Content(req.body)
     await content.save()
     if (content.id) {
+        content = complete_link(content)
         res.json(content);
     }
     

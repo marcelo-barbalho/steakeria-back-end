@@ -46,7 +46,7 @@ module.exports = async function (req, res, next) {
                 res.status(500).send(err)
                 
             }else{
-                console.log(`File uploaded sucefully. ${data.location}`)
+                console.log(`File uploaded sucefully. ${data.Location}`)
                 fs.unlinkSync(`./uploads/${name}`)
                 next()
             }
