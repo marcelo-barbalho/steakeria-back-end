@@ -33,7 +33,7 @@ router.get('/:id',[], async (req, res, next) => {
 
 // @route    PATCH /product/:id
 // @desc     PARTIAL UPDATE product
-// @access   Public
+// @access   Private
 router.patch('/:id',auth, file, async (req, res, next) => {
   try {
       req.body.last_modified_by=req.user.id
@@ -77,7 +77,7 @@ router.delete('/:id',[], async (req, res, next) => {
 // @access   Public
 router.get('/', async (req, res, next) => {
     try {
-      let products = await Product.find({})
+      let products = await Product.find(req.query)
       const BUCKET_PUBLIC_PATH = process.env.BUCKET_PUBLIC_PATH || config.get('BUCKET_PUBLIC_PATH')
       products = products.map(function(product){
         product.photo = `${BUCKET_PUBLIC_PATH}${product.photo}`

@@ -2,15 +2,13 @@ const express = require('express')
 const Content = require('../../models/content')
 const auth = require('../../middleaware/auth')
 const { check, validationResult } = require('express-validator');
-const router = express.Router();
 const MSGS = require('../../messages')
 const file = require('../../middleaware/file_content')
-const config = require('config')
 const complete_link = require('../../service/complete_link')
+const router = express.Router();
 
 
 
-const BUCKET_PUBLIC_PATH = process.env.BUCKET_PUBLIC_PATH || config.get('BUCKET_PUBLIC_PATH')
 
 // @route    DELETE /content/:contentId
 // @desc     DELETE content
