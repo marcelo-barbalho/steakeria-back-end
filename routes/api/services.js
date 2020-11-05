@@ -34,6 +34,36 @@ router.post('/:contentId', auth, file, async (req, res, next) => {
   }
 })
 
+// @route    PATCH /services/:contentId
+// @desc     UPDATE services
+// @access   Private
+
+router.patch('/:contentId-:serviceId', auth, file, async (req, res, next) => {
+  try {
+    // const contentId = req.params.contentId
+    const serviceId = req.params.serviceId
+    let query = {'services.service._id' : serviceId}
+    update = {} 
+    if (req.body.photo_name) {
+      req.body.photo=`services/${req.body.photo_name}`
+    }
+    for (const [key, value] of Object.entries(req.body)) {
+      update [`services.service.$.${key}`] = value
+    }
+    await Content.updateOne(query, { $set: update}, {new:true})
+    let content = await Content.findOne(query)
+    if (content.id) { 
+      content = complete_link(content)
+      res.json(content)
+    } else {
+      res.status(404).send({ "error": MSGS.CONTENT404  })
+    }
+  } catch (err) {
+    console.error(err.message)
+    res.status(500).send({ "error": MSGS.GENERIC_ERROR})
+  }
+})
+
 // @route    DELETE /services/:contentId
 // @desc     DELETE services
 // @access   Private

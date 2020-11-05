@@ -12,6 +12,35 @@ const get_max_order = require('../../service/get_max_order')
 // @route    PATCH /infos/:contentId-:infoId
 // @desc     UPDATE infos
 // @access   Private
+router.patch('/:contentId-:infoId', auth, file, async (req, res, next) => {
+  try {
+    const contentId = req.params.contentId
+    const infoId = req.params.infoId
+    let query = {'infos._id' : infoId}
+    update = {} 
+    if (req.body.photo_name) {
+      req.body.photo=`infos/${req.body.photo_name}`
+    }
+    for (const [key, value] of Object.entries(req.body)) {
+      update [`infos.$.${key}`] = value
+    }
+    await Content.updateOne(query, { $set: update}, {new:true})
+    let content = await Content.findOne(query)
+    if (content.id) { 
+      content = complete_link(content)
+      res.json(content)
+    } else {
+      res.status(404).send({ "error": MSGS.CONTENT404  })
+    }
+  } catch (err) {
+    console.error(err.message)
+    res.status(500).send({ "error": MSGS.GENERIC_ERROR})
+  }
+})
+
+// @route    PUT /infos/:contentId-:infoId
+// @desc     UPDATE infos
+// @access   Private
 router.put('/:contentId-:infoId', auth, file, async (req, res, next) => {
   try {
     const contentId = req.params.contentId
@@ -39,6 +68,7 @@ router.put('/:contentId-:infoId', auth, file, async (req, res, next) => {
     res.status(500).send({ "error": MSGS.GENERIC_ERROR})
   }
 })
+
 
 
 // @route    POST /infos/:contentId
