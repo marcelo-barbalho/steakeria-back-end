@@ -77,7 +77,7 @@ router.delete('/:id',[], async (req, res, next) => {
 // @access   Public
 router.get('/', async (req, res, next) => {
     try {
-      let products = await Product.find(req.query)
+      let products = await Product.find(req.query).populate('category')
       const BUCKET_PUBLIC_PATH = process.env.BUCKET_PUBLIC_PATH || config.get('BUCKET_PUBLIC_PATH')
       products = products.map(function(product){
         product.photo = `${BUCKET_PUBLIC_PATH}${product.photo}`

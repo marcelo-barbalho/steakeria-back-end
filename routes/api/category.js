@@ -1,5 +1,6 @@
 const express = require('express');
 const Category = require('../../models/category');
+const Product = require('../../models/product');
 const { check, validationResult } = require('express-validator');
 const router = express.Router();
 const MSGS = require('../../messages')
@@ -48,9 +49,15 @@ router.patch('/:id',auth, async (req, res, next) => {
 router.delete('/:id',auth, async (req, res, next) => {
   try {
       const id = req.params.id
-      const category = await Category.findOneAndDelete({_id : id})
+      let category = await Category.findOne({_id : id})
       if(category){
+        const products = await Product.find({ category : category.id})
+        if (products.length > 0) {
+          res.status(404).send({ "error": MSGS.CANTDELETETHISCATEGORY }) 
+        }else{
+          await Category.findOneAndDelete({_id : id})
           res.json(category)
+        }
       }else{
           res.status(404).send({ "error": MSGS.CATEGORY404 }) 
       }
