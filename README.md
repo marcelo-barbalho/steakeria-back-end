@@ -28,8 +28,8 @@ e exibir em uma vitrine
 <h3 id='run'>🚀Como rodar o Projeto</h3>
 Este projeto é divido em duas partes:
 <ol>
-	<li>Backend </li>
-	<li>Frontend (este repositorio) </li>
+	<li>Backend (este repositorio)</li>
+	<li>Frontend  </li>
 </ol>
 
 💡O Frontend precisa que o Backend esteja sendo executado para funcionar.
